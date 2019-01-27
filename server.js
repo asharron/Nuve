@@ -3,6 +3,10 @@ const app = express();
 const path = require('path');
 const fs = require('fs');
 
+const tmdbconfig = require('./tmdb.json');
+const tmdbKey = process.env.TMDB_API_KEY;
+const apiUrl = "https://image.themoviedb.org/";
+
 //Test data structure
 //TODO: Commit this to DB so it doesn't have to build on start every time
 var filemap = {};
