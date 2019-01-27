@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import FaHeartO from 'react-icons/lib/fa/heart-o'
+import { FaHeartO } from 'react-icons/fa'
 
 class Poster extends Component{
   render(){

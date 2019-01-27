@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import MdSearch from 'react-icons/lib/md/search'
-import MdMenu from 'react-icons/lib/md/menu'
+import { MdSearch } from 'react-icons/md'
+import { MdMenu } from 'react-icons/md'
 
 class Navbar extends Component{
   render(){
