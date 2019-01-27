@@ -1,4 +1,4 @@
-# Nuve Media Server UI
+# Nuve Media Server
 
 Nuve media server is lightweight and beautiful.
 
@@ -8,17 +8,16 @@ Nuve media server is lightweight and beautiful.
 
 ## Getting Started
 
-`cd Nuve-UI`
+`cd Nuve`
 
 Install dependencies
 
 `npm install`
 
+Build the bundle in watch mode
+
+`webpack --watch`
+
 Start up the server
 
 `npm start`
-
-Watch Sass for changes when styling
-
-`sass --watch style.scss:style.css`
-
