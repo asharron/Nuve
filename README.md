@@ -7,7 +7,6 @@ Nuve media server is lightweight and beautiful.
 ## Screenshots
 
 ![](https://i.imgur.com/ab7QIv3.png)
-![](https://roberthosking.com/wp-content/uploads/2018/05/capture2-1-768x576.png)
 
 ## Installation
 
@@ -16,6 +15,8 @@ A .deb installer will be created for the first release.
 ## Design Philosophy
 
 Nuve is the first and only no-comprimise, roll-your-own media server designed to run on low-power hardware like a Raspberry Pi. This is accomplished by moving computation to the viewing client where possible and eliminating non-essential features.
+
+From a UI perspective, Nuve values simplicity, intuitive interation, custimization, and minimal clicks per action. This is accomplished by heavy use of whitespace, Flat UI, animations, smart search and suggestions, and theme support.
 
 ## Development Setup
 
@@ -43,6 +44,7 @@ Start up the server
 ### V2
 
 - [ ] Mobile Friendly UI
+- [ ] Theme Support
 - [ ] Multicast - CPU efficient synchronized streaming to multiple clients
 - [ ] Chromecast support
 - [ ] Store library in the cloud (Pay per usage)
