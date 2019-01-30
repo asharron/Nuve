@@ -7,11 +7,6 @@
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch"
   },
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "guessit-exec": "0.0.1",
-    "request-promise-native": "^1.0.5"
-  },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
@@ -41,6 +36,9 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.28.3",
-    "webpack-cli": "^3.2.0"
+    "webpack-cli": "^3.2.0",
+    "body-parser": "^1.18.3",
+    "guessit-exec": "0.0.1",
+    "request-promise-native": "^1.0.5"
   }
 }
