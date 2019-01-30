@@ -7,17 +7,19 @@ const path = require('path');
 const tmdbconfig = require('./tmdb.json');
 const tmdbKey = process.env.TMDB_API_KEY;
 const movieSearch = "https://api.themoviedb.org/3/search/movie";
+const tvSearch = "https://api.themoviedb.org/3/search/tv"
 const imageUrl = tmdbconfig.images.secure_base_url;
 const posterSize = "w500";
 const backdropSize = "w780"
 
 //Test data structure
-//TODO: Commit this to DB so it doesn't have to build on start every time
+//TODO: Commit this to DB or FS so it doesn't have to build on start every time
 var filemap = {};
 
 function createMetadata() {
 
     //Read the files in the video directory
+    //TODO: Recurse through directories 
     fs.readdir(path.join(__dirname, "/videos"), (err, files) => {
         //Create / check for metadata for each one
         files.forEach((name) => {
@@ -35,17 +37,20 @@ function createMetadata() {
                 } else {
                     //Guess the move name and grab the data on it
                     guessit(name).then((guess) => {
+                        //TODO: handle tv vs movie
+                        //TODO: handle seasons
                         const title = guess.title || guess.other;
                         console.log(guess);
                         const options = {
                             method: "GET",
-                            uri: movieSearch + `?api_key=${tmdbKey}&query=${title}`,
+                            uri: tvSearch + `?api_key=${tmdbKey}&query=${title}`,
                             json: true
                         }
                         return rp(options);
                     }).then((data) => {
                         //Now write the data
                         filemap[name] = metaname;
+                        //TODO: Handle NULL Values
                         movieData = {
                             title: data.results["0"].title || '',
                             poster: imageUrl + posterSize + data.results["0"].poster_path || '',
