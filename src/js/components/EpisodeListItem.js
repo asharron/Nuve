@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-class EpisodeListItem extends Component{
-  render(){
-    return(
+class EpisodeListItem extends Component {
+  render() {
+    return (
       <div className="episode row">
         <div className="index col-1">
           <p>{this.props.index}</p>
@@ -13,9 +13,8 @@ class EpisodeListItem extends Component{
         <div className="time col-2">
           <p>{this.props.time}</p>
         </div>
-
       </div>
-    )
+    );
   }
 }
-export default EpisodeListItem
+export default EpisodeListItem;

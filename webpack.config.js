@@ -26,6 +26,10 @@ module.exports = {
     disableHostCheck: true,
     port: 9000
   },
+  watchOptions: {
+    poll: true,
+    ignored: /node_modules/
+  },
   devtool:'source-map',
   module: {
     rules: [

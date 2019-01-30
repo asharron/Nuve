@@ -1,19 +1,34 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import { store } from "../store";
+import { connect } from "react-redux";
 
-class Search extends Component{
-  render(){
-    return(
-        <div className="container">
-          <input type="checkbox" id="search" hidden="hidden" checked />
-          <main>
-            <section className="search">
-              <form action="">
-                <input type="search" placeholder="Search..."/>
-              </form>
-            </section>
-          </main>
-        </div>
-    )
+@connect(store => {
+  return {
+    showSearchbar: store.library.showSearchbar
+  };
+})
+class Search extends Component {
+  state = {
+    query: ""
+  };
+  handleChange(stateKey, evt) {
+    this.setState({ [stateKey]: evt.target.value });
+  }
+  render() {
+    if (this.props.showSearchbar) {
+      return (
+        <input
+          id="search"
+          autoFocus
+          type="search"
+          placeholder="&#xf002; Search..."
+          value={this.state.query}
+          onChange={evt => this.handleChange("query", evt)}
+        />
+      );
+    } else {
+      return "";
+    }
   }
 }
-export default Search
+export default Search;
