@@ -1,4 +1,4 @@
-const guessit = require('guessit-exec');
+const guessit = require('guessit-wrapper');
 const fs = require('fs');
 const rp = require('request-promise-native');
 const path = require('path');
@@ -36,7 +36,7 @@ function createMetadata() {
                     console.log("Found metadata for ", name);
                 } else {
                     //Guess the move name and grab the data on it
-                    guessit(name).then((guess) => {
+                    guessit.parseName(name).then((guess) => {
                         //TODO: handle tv vs movie
                         //TODO: handle seasons
                         const title = guess.title || guess.other;
