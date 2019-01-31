@@ -15,7 +15,7 @@ const backdropSize = "w780"
 
 //Writes the completed movie metadata to disk
 function writeMetaMap(filemap) {
-    fs.open(path.join(__dirname, "metamap.js"), "w", (err, fd) => {
+    fs.open(path.join(__dirname, "metamap.json"), "w", (err, fd) => {
         if (err) {
             console.log("Shit is about to go down");
             console.log(err);
