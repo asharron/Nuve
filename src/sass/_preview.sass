@@ -1,0 +1,46 @@
+.preview
+  width: 80%
+  margin: auto
+  overflow: overlay
+  display: flex
+  z-index: -2
+
+.poster
+  float: left
+  background-size: cover
+  & img
+    width: 20vw
+    opacity: 0
+
+.brief
+  background-size: cover
+  width: 100%
+  position: relative
+  z-index: 1
+  display: flex
+  &:before
+    content: ''
+    height: 100%
+    width: 100%
+    position: absolute
+    z-index: -1
+    background: inherit
+    filter: opacity(100) grayscale(100%) contrast(130%)
+  .custom-bg
+    width: 100%
+  h1
+    color: $white
+    text-transform: uppercase
+    font-weight: 700
+    margin: 1.5em auto auto .75em
+  h4
+    color: $grey
+    font-weight: 100
+    font-style: italic
+    margin: auto auto auto 1.2em
+  p
+    color: $white
+    font-size: 12pt
+    margin: 1.5em auto auto 1.7em
+    line-height: 1.3em
+    width: 70%
