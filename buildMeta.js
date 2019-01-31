@@ -12,17 +12,31 @@ const imageUrl = tmdbconfig.images.secure_base_url;
 const posterSize = "w500";
 const backdropSize = "w780"
 
-//Test data structure
-//TODO: Commit this to DB or FS so it doesn't have to build on start every time
-var filemap = {};
+
+//Writes the completed movie metadata to disk
+function writeMetaMap(filemap) {
+    fs.open(path.join(__dirname, "metamap.js"), "w", (err, fd) => {
+        if (err) {
+            console.log("Shit is about to go down");
+            console.log(err);
+        } else {
+            filemap = JSON.stringify(filemap);
+            fs.write(fd, filemap, 'utf8', () => {
+                console.log("The metamap has been written");
+            })
+        }
+    });
+}
 
 function createMetadata() {
-
+    var filemap = {};
+    var promiseList = [];
     //Read the files in the video directory
     //TODO: Recurse through directories 
     fs.readdir(path.join(__dirname, "/videos"), (err, files) => {
         //Create / check for metadata for each one
-        files.forEach((name) => {
+        files.forEach((name, index) => {
+            console.log(index);
             //Only search for video files
             if (name.split('.').pop() == 'mp4') {
                 //Create what the meta file would be named
@@ -32,33 +46,37 @@ function createMetadata() {
                 metaname = metaname.join('') + "meta.json";
                 console.log(path.join(__dirname, "/videos", metaname));
                 if (fs.existsSync(path.join(__dirname, "/videos", metaname))) {
-                    //Do nothing
                     console.log("Found metadata for ", name);
                 } else {
                     //Guess the move name and grab the data on it
-                    guessit.parseName(name).then((guess) => {
-                        //TODO: handle tv vs movie
+                    promiseList.push(guessit.parseName(name).then((guess) => {
                         //TODO: handle seasons
                         const title = guess.title || guess.other;
                         console.log(guess);
+                        var searchType;
+                        if (guess.type === "movie") {
+                            searchType = movieSearch
+                        } else {
+                            searchType = tvSearch
+                        }
                         const options = {
                             method: "GET",
-                            uri: tvSearch + `?api_key=${tmdbKey}&query=${title}`,
+                            uri: searchType + `?api_key=${tmdbKey}&query=${title}`,
                             json: true
                         }
                         return rp(options);
                     }).then((data) => {
                         //Now write the data
-                        filemap[name] = metaname;
-                        //TODO: Handle NULL Values
                         movieData = {
+                            id: index,
                             title: data.results["0"].title || '',
-                            poster: imageUrl + posterSize + data.results["0"].poster_path || '',
-                            backdrop: imageUrl + backdropSize + data.results["0"].backdrop_path || '',
+                            poster: data.results["0"].poster_path ? imageUrl + posterSize + data.results["0"].poster_path : '',
+                            backdrop: data.results["0"].backdrop_path ? imageUrl + backdropSize + data.results["0"].backdrop_path : '',
                             overview: data.results["0"].overview || '',
                             released: data.results["0"].release_date || '',
                             genres: data.results["0"].genre_ids || ''
                         };
+                        filemap[index] = movieData;
                         jsonMovieData = JSON.stringify(movieData);
                         console.log(metaname);
                         fs.open(path.join(__dirname, "/videos/", metaname), "w", (err, fd) => {
@@ -68,29 +86,25 @@ function createMetadata() {
                             } else {
                                 fs.write(fd, jsonMovieData, 'utf8', () => {
                                     console.log(metaname, " has been written");
-                                })
+                                });
                             }
                         });
                         return data
                     }).catch(e => {
                         console.log("Shit: Something went wrong");
                         console.log(e);
-                    });
+                    }));
                 }
             } else {
                 console.log("Ignoring ", name);
             }
         });
-    });
-}
-
-function buildMap() {
-    //Read the files in the video directory
-    fs.readdir(path.join(__dirname, "/videos"), (err, files) => {
-
-        //Create a url for each one
-        files.forEach((name) => {
-            filemap[name] = name.slice(0, name.length) + "meta.js";
+        Promise.all(promiseList).then(() => {
+            writeMetaMap(filemap);
+            return;
+        }).catch((err) => {
+            console.log("Something went wrong when writing the metamap");
+            console.log(err);
         });
     });
 }
