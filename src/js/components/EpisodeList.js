@@ -1,44 +1,186 @@
 import React, { Component } from "react";
 import EpisodeListItem from "./EpisodeListItem";
+import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { MdSwapVert } from "react-icons/md";
 
+import { store } from "../store";
+import { connect } from "react-redux";
+
+@connect(store => {
+  return {
+    showSeason: store.library.showSeason,
+    flipSeasons: store.library.flipSeasons
+  };
+})
 class EpisodeList extends Component {
+  scrollToTop() {
+    scroll.scrollToTop();
+  }
+  changeSeason(season){
+    const payload = {season: season}
+      store.dispatch({type: "SELECT_SEASON", payload})
+      this.scrollToTop()
+  }
+  flipSeasons(){
+    store.dispatch({type: "FLIP_SEASONS"})
+  }
+
   render() {
+    const ref = this
     var episodes = [
       {
+        ep: 1,
         title: "Nobody's Home",
-        time: "21:58"
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
       },
       {
+        ep: 1,
         title: "Nobody's Home",
-        time: "21:58"
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
       },
       {
-        title: "Here's Home",
-        time: "21:58"
-      },
-      {
-        title: "There's Home",
-        time: "21:58"
-      },
-      {
-        title: "Keeper's Home",
-        time: "21:58"
-      },
-      {
-        title: "Feel's Home",
-        time: "21:58"
-      },
-      {
-        title: "Office's Home",
-        time: "21:58"
-      },
-      {
+        ep: 1,
         title: "Nobody's Home",
-        time: "21:58"
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
       },
       {
+        ep: 1,
         title: "Nobody's Home",
-        time: "21:58"
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
+      },
+      {
+        ep: 1,
+        title: "Nobody's Home",
+        time: "21:58",
+        img: "https://image.tmdb.org/t/p/w227_and_h127_bestv2/9vTB5CaQIeitwd97OrZtMJXoER3.jpg",
+        desc: "A long lost artifact causes Princess Bubblegum to harken back to the creation of the Candy Kingdom."
       }
     ];
     var seasons = [
@@ -63,25 +205,41 @@ class EpisodeList extends Component {
       { season: 19 },
       { season: 20 }
     ];
+    if (this.props.flipSeasons) {
+      seasons = seasons.reverse();
+    }
     return (
       <div className="episode-list container">
         <div className="row">
-          <div className="col-sm-4">
-            <h2>SEASONS</h2>
+          <div className="col-sm-3 nopad">
+          <div className="list-header">
+           <h2>SEASONS</h2>
+            <h3 onClick={this.flipSeasons}><MdSwapVert /></h3>
+            </div>
             <div className="seasons">
               {seasons.map(function(s, index) {
-                return <h4 key={index}>{"Season " + s.season}</h4>;
+                let active;
+                if (s.season === ref.props.showSeason) {
+                  active = "active"
+                }
+                return <h4 onClick={()=>ref.changeSeason(s.season)} className={active} key={index}>{"Season " + s.season}</h4>;
               })}
             </div>
           </div>
-          <div className="col-sm-8">
-            <h2>EPISODES</h2>
+          <div className="col-sm-9">
+          <div className="list-header">
+           <h2>EPISODES</h2>
+            <h3 onClick={this.flipSeasons}><MdSwapVert /></h3>
+            </div>
             {episodes.map(function(episode, index) {
               return (
                 <EpisodeListItem
+                  season={ref.props.showSeason}
                   key={index}
-                  index={index + 1}
+                  ep={episode.ep}
                   title={episode.title}
+                  img={episode.img}
+                  desc={episode.desc}
                   time={episode.time}
                 />
               );

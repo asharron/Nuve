@@ -17,6 +17,16 @@ export function LibraryReducer(state, action) {
         preview: action.payload.id
       });
       break;
+    case "SELECT_SEASON":
+      return updateStore(state, {
+        showSeason: action.payload.season
+      });
+      break;
+    case "FLIP_SEASONS":
+      return updateStore(state, {
+        flipSeasons: !state.flipSeasons
+      })
+      break;
     default:
       return { ...state };
   }

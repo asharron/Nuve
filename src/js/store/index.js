@@ -7,6 +7,8 @@ import { Reducers } from "../reducers";
 export const initialState = {
   library: {
     selected: "movies",
+    showSeason: 1,
+    flipSeasons: false,
     shelves: {
       movies: {},
       series: {}

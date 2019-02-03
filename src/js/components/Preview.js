@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+const Vibrant = require('node-vibrant');
+import image from "../../../dist/img/img.jpg"
+
 
 class Preview extends Component {
   state = {
@@ -10,6 +13,16 @@ class Preview extends Component {
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   };
+
+  helloPalette = palette => {
+     console.log(palette)
+   }
+
+  componentDidMount(){
+    let v = new Vibrant(image)
+    v.getPalette((err, palette) => console.log(palette.Vibrant.getHex()))
+    console.log("hiya");
+  }
 
   render() {
     return (
@@ -24,6 +37,7 @@ class Preview extends Component {
           className="brief"
           style={{ backgroundImage: "url(" + this.state.cover + ")" }}
         >
+
           <div
             className="custom-bg"
             style={{
@@ -31,10 +45,13 @@ class Preview extends Component {
                 "radial-gradient(circle at 20% 50%, rgba(8.63%, 39.22%, 38.04%, 0.98) 0%, rgba(8.63%, 39.22%, 38.04%, 0.88) 100%)"
             }}
           >
-            <h1>{this.state.title}</h1>
-            <h4>{this.state.year}</h4>
-            <p>{this.state.summary}</p>
-          </div>
+          <h1>{this.state.title}</h1>
+          <h4>{this.state.year}</h4>
+          <p>{this.state.summary}</p>
+        </div>
+
+
+
         </div>
       </div>
     );
