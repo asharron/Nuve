@@ -1,5 +1,5 @@
 const guessit = require('guessit-wrapper');
-const fs = require('fs');
+const fs = require('fs').promises;
 const rp = require('request-promise-native');
 const path = require('path');
 
@@ -14,93 +14,69 @@ const backdropSize = "w780"
 
 
 //Writes the completed movie metadata to disk
-function writeMetaMap(filemap) {
-    fs.open(path.join(__dirname, "metamap.json"), "w", (err, fd) => {
-        if (err) {
-            console.log("Shit is about to go down");
-            console.log(err);
-        } else {
-            filemap = JSON.stringify(filemap);
-            fs.write(fd, filemap, 'utf8', () => {
-                console.log("The metamap has been written");
-            })
-        }
+function writeMetaMap(meta) {
+    fs.open(path.join(__dirname, "metamap.json"), "w").then((fd) => {
+        meta = JSON.stringify(meta);
+        fs.writeFile(fd, meta, 'utf8').then(() => {
+            console.log("The metamap has been written");
+        });
     });
+    return;
 }
 
-function createMetadata() {
-    var filemap = {};
+function createMetadataOld(name, index) {
+    var meta = {};
     var promiseList = [];
     //Read the files in the video directory
-    //TODO: Recurse through directories 
+    //TODO: Separate Movies & TV by folder
     fs.readdir(path.join(__dirname, "/videos"), (err, files) => {
         //Create / check for metadata for each one
         files.forEach((name, index) => {
             console.log(index);
             //Only search for video files
             if (name.split('.').pop() == 'mp4') {
-                //Create what the meta file would be named
-                var metaname = name.split('.');
-                metaname = metaname.slice(0, name.length - 1);
-                metaname.pop();
-                metaname = metaname.join('') + "meta.json";
-                console.log(path.join(__dirname, "/videos", metaname));
-                if (fs.existsSync(path.join(__dirname, "/videos", metaname))) {
-                    console.log("Found metadata for ", name);
-                } else {
-                    //Guess the move name and grab the data on it
-                    promiseList.push(guessit.parseName(name).then((guess) => {
-                        //TODO: handle seasons
-                        const title = guess.title || guess.other;
-                        console.log(guess);
-                        var searchType;
-                        if (guess.type === "movie") {
-                            searchType = movieSearch
-                        } else {
-                            searchType = tvSearch
-                        }
-                        const options = {
-                            method: "GET",
-                            uri: searchType + `?api_key=${tmdbKey}&query=${title}`,
-                            json: true
-                        }
-                        return rp(options);
-                    }).then((data) => {
-                        //Now write the data
-                        movieData = {
-                            id: index,
-                            title: data.results["0"].title || '',
-                            poster: data.results["0"].poster_path ? imageUrl + posterSize + data.results["0"].poster_path : '',
-                            backdrop: data.results["0"].backdrop_path ? imageUrl + backdropSize + data.results["0"].backdrop_path : '',
-                            overview: data.results["0"].overview || '',
-                            released: data.results["0"].release_date || '',
-                            genres: data.results["0"].genre_ids || ''
-                        };
-                        filemap[index] = movieData;
-                        jsonMovieData = JSON.stringify(movieData);
-                        console.log(metaname);
-                        fs.open(path.join(__dirname, "/videos/", metaname), "w", (err, fd) => {
-                            if (err) {
-                                console.log("OH MY GOD!");
-                                console.log(err);
-                            } else {
-                                fs.write(fd, jsonMovieData, 'utf8', () => {
-                                    console.log(metaname, " has been written");
-                                });
-                            }
-                        });
-                        return data
-                    }).catch(e => {
-                        console.log("Shit: Something went wrong");
-                        console.log(e);
-                    }));
-                }
+                //Guess the move name and grab the data on it
+                promiseList.push(guessit.parseName(name).then((guess) => {
+                    //TODO: handle seasons
+                    const title = guess.title || guess.other;
+                    console.log(guess);
+                    var searchType;
+                    if (guess.type === "movie") {
+                        searchType = movieSearch
+                    } else {
+                        searchType = tvSearch
+                    }
+                    const options = {
+                        method: "GET",
+                        uri: searchType + `?api_key=${tmdbKey}&query=${title}`,
+                        json: true
+                    }
+                    return rp(options);
+                }).then((data) => {
+                    //Now write the data
+                    movieData = {
+                        id: index,
+                        title: data.results["0"].title || '',
+                        poster: data.results["0"].poster_path ? imageUrl + posterSize + data.results["0"].poster_path : '',
+                        backdrop: data.results["0"].backdrop_path ? imageUrl + backdropSize + data.results["0"].backdrop_path : '',
+                        overview: data.results["0"].overview || '',
+                        released: data.results["0"].release_date || '',
+                        genres: data.results["0"].genre_ids || ''
+                    };
+                    meta[index] = movieData;
+                    jsonMovieData = JSON.stringify(movieData);
+                    console.log(metaname);
+                    return data
+                }).catch(e => {
+                    console.log("Shit: Something went wrong");
+                    console.log(e);
+                }));
             } else {
                 console.log("Ignoring ", name);
             }
         });
         Promise.all(promiseList).then(() => {
-            writeMetaMap(filemap);
+            writeMetaMap(meta);
             return;
         }).catch((err) => {
             console.log("Something went wrong when writing the metamap");
@@ -109,4 +85,70 @@ function createMetadata() {
     });
 }
 
-createMetadata();
+var meta = {};
+var count = 0;
+
+//TODO: Vibrant color palanting 
+//TODO: Count number of seasons in library 
+
+function createMetaData(directoryName) {
+    var promiseList = [];
+
+    return fs.readdir(directoryName).then((files) => {
+        files.forEach((filename, index) => {
+            promiseList.push(fs.lstat(path.join(directoryName, filename)).then((stat) => {
+                if (stat.isDirectory()) {
+                    //recurse through each directory
+                    return createMetaData(path.join(directoryName, filename));
+                } else {
+                    //Build the metadata
+                    return guessit.parseName(filename);
+                }
+            }).then((guess) => {
+                if (guess) {
+                    const title = guess.title || guess.other;
+                    var searchType = guess.type === "movie" ? movieSearch : tvSearch;
+                    const options = {
+                        method: "GET",
+                        uri: searchType + `?api_key=${tmdbKey}&query=${title}`,
+                        json: true
+                    }
+                    return rp(options);
+                } else {
+                    return
+                }
+            }).then((data) => {
+                if (data) {
+                    count++;
+                    movieData = {
+                        id: count - 1,
+                        title: data.results["0"].title || '',
+                        poster: data.results["0"].poster_path ? imageUrl + posterSize + data.results["0"].poster_path : '',
+                        backdrop: data.results["0"].backdrop_path ? imageUrl + backdropSize + data.results["0"].backdrop_path : '',
+                        overview: data.results["0"].overview || '',
+                        released: data.results["0"].release_date || '',
+                        genres: data.results["0"].genre_ids || ''
+                    };
+                    meta[count - 1] = movieData;
+
+                    console.log("returning");
+                    return
+                } else {
+                    return
+                }
+            }));
+        });
+        return Promise.all(promiseList);
+    }).catch((err) => {
+        console.log("Ooops, something went wrong");
+        console.log(err);
+    });
+}
+
+//createMetadata();
+createMetaData(path.join(__dirname, "/videos")).then(() => {
+    console.log("writing");
+    writeMetaMap(meta);
+}).catch((err) => {
+    console.log("something wnet werong");
+});

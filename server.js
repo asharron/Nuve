@@ -18,6 +18,7 @@ app.get('/api/videoinfo', (req, res) => {
 	res.send(data);
 });
 
+//TODO: Return Movie Season
 
 //Returns JSON of video info for number of videos specfied
 app.get('/api/videos', (req, res) => {
