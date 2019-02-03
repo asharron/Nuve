@@ -16,6 +16,7 @@ class Base extends Component {
           <br />
           <br />
           <br />
+          <br />
           <div className="container">
             <Search />
           </div>
