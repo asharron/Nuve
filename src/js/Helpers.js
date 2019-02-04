@@ -5,5 +5,5 @@ export function goTo(url) {
 }
 
 export function goBack() {
-  history.back();
+  window.history.back();
 }

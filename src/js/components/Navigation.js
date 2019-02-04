@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-
-import { MdSearch, MdSettings, MdHome, MdArrowBack } from "react-icons/md";
+import Sidebar from "react-sidebar";
+import SidebarContent from "./SidebarContent"
+import { MdSearch, MdMenu, MdHome, MdArrowBack } from "react-icons/md";
 import { goTo, goBack } from "../Helpers";
 import { ROUTES } from "../Routes";
 import { store } from "../store";
@@ -10,7 +11,9 @@ import { connect } from "react-redux";
   return {
     shelves: store.library.shelves,
     selected: store.library.selected,
-    showSearchbar: store.library.showSearchbar
+    showSearchbar: store.library.showSearchbar,
+    sidebarOpen: store.app.sidebarOpen,
+
   };
 })
 export default class Navigation extends Component {
@@ -34,6 +37,10 @@ export default class Navigation extends Component {
 
   toggleSearch() {
     store.dispatch({ type: "TOGGLE_SEARCH" });
+  }
+
+  toggleSidebar() {
+    store.dispatch({ type: "TOGGLE_SIDEBAR" });
   }
 
   render() {
@@ -90,19 +97,31 @@ export default class Navigation extends Component {
             id="nav-content"
           >
             <ul className="navbar-nav" style={{ float: "right" }}>
-              <li className="nav-item icon">
-                <a className="nav-link" onClick={this.toggleSearch}>
+              <li className="nav-item icon" onClick={this.toggleSearch}>
+                <a className="nav-link" >
                   <MdSearch />
                 </a>
               </li>
-              <li className="nav-item icon">
+              <li className="nav-item icon" onClick={this.toggleSidebar}>
                 <a className="nav-link">
-                  <MdSettings />
+                  <MdMenu />
                 </a>
               </li>
             </ul>
           </div>
         </nav>
+
+        <Sidebar
+       sidebar={<SidebarContent/>}
+       open={this.props.sidebarOpen}
+       onSetOpen={this.toggleSidebar}
+       styles={{ sidebar: { background: "white" } }}
+       rootClassName="sidebar-wrapper"
+     >
+       <button onClick={this.toggleSidebar}>
+         Open sidebar
+       </button>
+     </Sidebar>
       </div>
     );
   }

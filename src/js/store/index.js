@@ -5,6 +5,9 @@ import Sagas from "../sagas";
 import { Reducers } from "../reducers";
 // initialize the redux state
 export const initialState = {
+  app:{
+    sidebarOpen: false,
+  },
   library: {
     selected: "movies",
     showSeason: 1,
