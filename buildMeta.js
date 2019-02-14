@@ -95,17 +95,19 @@ function createMetaData(directoryName) {
     var promiseList = [];
 
     return fs.readdir(directoryName).then((files) => {
-        files.forEach((filename, index) => {
+        files.forEach((filename) => {
             promiseList.push(fs.lstat(path.join(directoryName, filename)).then((stat) => {
                 if (stat.isDirectory()) {
                     //recurse through each directory
                     return createMetaData(path.join(directoryName, filename));
                 } else {
+                    //TODO: Check If it is mp4
                     //Build the metadata
                     return guessit.parseName(filename);
                 }
             }).then((guess) => {
-                if (guess) {
+                //TODO: handle promise as return value
+                if (!Array.isArray(guess) && guess) {
                     const title = guess.title || guess.other;
                     var searchType = guess.type === "movie" ? movieSearch : tvSearch;
                     const options = {
@@ -118,19 +120,22 @@ function createMetaData(directoryName) {
                     return
                 }
             }).then((data) => {
-                if (data) {
+                //TODO: handle promise return value
+                if (!Array.isArray(data) && data) {
+                    //TODO: store in varaible
                     count++;
+                    const index = count - 1;
                     movieData = {
-                        id: count - 1,
+                        id: index,
                         title: data.results["0"].title || '',
                         poster: data.results["0"].poster_path ? imageUrl + posterSize + data.results["0"].poster_path : '',
                         backdrop: data.results["0"].backdrop_path ? imageUrl + backdropSize + data.results["0"].backdrop_path : '',
                         overview: data.results["0"].overview || '',
                         released: data.results["0"].release_date || '',
-                        genres: data.results["0"].genre_ids || ''
+                        genres: data.results["0"].genre_ids || '',
+                        file: filename
                     };
-                    meta[count - 1] = movieData;
-
+                    meta[index] = movieData;
                     console.log("returning");
                     return
                 } else {
