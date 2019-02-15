@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Sidebar from "react-sidebar";
 import SidebarContent from "./SidebarContent"
 import { MdSearch, MdMenu, MdHome, MdArrowBack } from "react-icons/md";
+import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+
 import { goTo, goBack } from "../Helpers";
 import { ROUTES } from "../Routes";
 import { store } from "../store";
@@ -21,6 +23,22 @@ export default class Navigation extends Component {
     selected: "movies"
   };
 
+  componentDidUpdate(){
+    const ref = this
+    switch (this.props.sidebarOpen) {
+      case true:
+        ref.noscroll()
+        window.addEventListener('scroll', ref.noscroll);
+        break;
+      case false:
+        window.removeEventListener('scroll', ref.noscroll);
+        break;
+    }
+  }
+
+  noscroll() {
+    window.scrollTo( 0, 0 );
+  }
   switchShelf(shelf) {
     this.setState({
       selected: shelf
@@ -29,6 +47,7 @@ export default class Navigation extends Component {
       shelf: shelf
     };
     store.dispatch({ type: "SWITCH_SHELF", payload });
+    this.goHome()
   }
 
   goHome() {

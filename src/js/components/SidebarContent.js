@@ -15,17 +15,17 @@ class SidebarContent extends Component {
       <h4>Item 1</h4>
       <h4>Item 1</h4>
       <h4>Item 1</h4>
-      <label className="switch">
-        <input type="checkbox" />
-        <span className="slider round"></span>
-      </label>
+          <label className="switch">
+            <input type="checkbox" />
+            <span className="slider round"></span>
+          </label>
     </div>
     <div className="sidebar-footer">
-    <div className="col-xs-2">
+    <div className="col-xs-3">
     <img width="50px" src="/img/logo.png"/>
     </div>
-    <div className="col-xs-10">
-    <p>Version 0.1 alpha</p>
+    <div className="col-xs-9" style={{textAlign:"right"}}>
+    <p>V0.1 alpha</p>
     </div>
     </div>
     </div>

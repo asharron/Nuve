@@ -24,7 +24,7 @@ export const ROUTES = {
     component: null
   },
   movie: {
-    url: "/movie/:id",
+    url: "/movies/:id",
     text: "Movie",
     component: MoviePreview
   }

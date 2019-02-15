@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-const Vibrant = require('node-vibrant');
-
 
 class Preview extends Component {
   state = {
@@ -46,5 +44,4 @@ class Preview extends Component {
     );
   }
 }
-// linear-gradient(0deg,rgba(255,0,150,0.7),rgba(255,0,150,0.7))
 export default Preview;
